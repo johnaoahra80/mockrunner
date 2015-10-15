@@ -1,18 +1,16 @@
 package com.mockrunner.util.common;
 
+import com.mockrunner.base.NestedApplicationException;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Perl5Matcher;
-
-import com.mockrunner.base.NestedApplicationException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Simple util class for <code>String</code> related methods.
@@ -359,8 +357,8 @@ public class StringUtil
     }
     
     /**
-     * Returns if the regular expression <code>target</code> matches 
-     * <code>source</code>, ignoring case, if <code>caseSensitive</code> 
+     * Returns if the regular expression <code>target</code> matches
+     * <code>source</code>, ignoring case, if <code>caseSensitive</code>
      * is <code>false</code>.
      * @param source the source String
      * @param target the target String
@@ -368,21 +366,19 @@ public class StringUtil
      * @return <code>true</code> if the strings matches
      *         <code>false</code> otherwise
      */
-    public static boolean matchesPerl5(String source, String target, boolean caseSensitive)
-    {
-        int mask = Perl5Compiler.CASE_INSENSITIVE_MASK;
-        if(caseSensitive)
-        {
-            mask = Perl5Compiler.DEFAULT_MASK;
+    public static boolean matchesRegex(String source, String target, boolean caseSensitive) {
+        final Pattern p;
+        try {
+            if ( caseSensitive ) {
+                p = Pattern.compile( target );
+            } else {
+                p = Pattern.compile( target, Pattern.CASE_INSENSITIVE );
+            }
         }
-        try
-        {
-            Pattern pattern = new Perl5Compiler().compile(target, mask);
-            return (new Perl5Matcher().matches(source, pattern));
-        } 
-        catch(MalformedPatternException exc)
-        {
-            throw new NestedApplicationException(exc);
+        catch (PatternSyntaxException pse){
+            throw new NestedApplicationException(pse);
         }
+        final Matcher m = p.matcher(source);
+        return  m.matches();
     }
 }

@@ -1,5 +1,7 @@
 package com.mockrunner.mock.jdbc;
 
+import com.mockrunner.util.common.StringUtil;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -8,11 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import com.mockrunner.util.common.StringUtil;
 
 /**
  * Mock implementation of <code>DatabaseMetaData</code>.
@@ -2314,7 +2313,7 @@ public class MockDatabaseMetaData implements DatabaseMetaData
                 }
                 else
                 {
-                    return StringUtil.matchesPerl5(other.getSchema(), convert(schema), caseSensitive);
+                    return StringUtil.matchesRegex( other.getSchema(), convert( schema ), caseSensitive );
                 }
             }
         }
@@ -2329,7 +2328,7 @@ public class MockDatabaseMetaData implements DatabaseMetaData
             }
             else
             {
-                return StringUtil.matchesPerl5(other.getTable(), convert(table), caseSensitive);
+                return StringUtil.matchesRegex( other.getTable(), convert( table ), caseSensitive );
             }
         }
         
@@ -2393,7 +2392,7 @@ public class MockDatabaseMetaData implements DatabaseMetaData
             AttributesDatabaseIdentifierImpl other = (AttributesDatabaseIdentifierImpl)object;
             if(null == attributeNamePattern) return false;
             if(null == other.getAttributeNamePattern()) return false;
-            return StringUtil.matchesPerl5(other.getAttributeNamePattern(), convert(attributeNamePattern), caseSensitive);
+            return StringUtil.matchesRegex( other.getAttributeNamePattern(), convert( attributeNamePattern ), caseSensitive );
         }
         
         @Override
@@ -2448,7 +2447,7 @@ public class MockDatabaseMetaData implements DatabaseMetaData
             ColumnDatabaseIdentifierImpl other = (ColumnDatabaseIdentifierImpl)object;
             if(null == columnNamePattern) return false;
             if(null == other.getColumnNamePattern()) return false;
-            return StringUtil.matchesPerl5(other.getColumnNamePattern(), convert(columnNamePattern), caseSensitive);
+            return StringUtil.matchesRegex(other.getColumnNamePattern(), convert(columnNamePattern), caseSensitive);
         }
         
         @Override

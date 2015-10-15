@@ -1,14 +1,13 @@
 package com.mockrunner.test.util;
 
+import com.mockrunner.util.common.StringUtil;
+import junit.framework.TestCase;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
-import junit.framework.TestCase;
-
-import com.mockrunner.util.common.StringUtil;
 
 public class StringUtilTest extends TestCase
 {
@@ -220,13 +219,13 @@ public class StringUtilTest extends TestCase
     
     public void testMatchesPerl5()
     {
-        assertTrue(StringUtil.matchesPerl5("abc", "abc", true));
-        assertTrue(StringUtil.matchesPerl5("abc", "a[abc]c", true));
-        assertTrue(StringUtil.matchesPerl5("aBc", "a[abc]c", false));
-        assertTrue(StringUtil.matchesPerl5("abc", ".*", true));
-        assertFalse(StringUtil.matchesPerl5("aBc", "abc", true));
-        assertFalse(StringUtil.matchesPerl5("aBc", "a[abc]c", true));
-        assertFalse(StringUtil.matchesPerl5("a[abc]c", "abc", true));
+        assertTrue(StringUtil.matchesRegex( "abc", "abc", true ));
+        assertTrue(StringUtil.matchesRegex( "abc", "a[abc]c", true ));
+        assertTrue(StringUtil.matchesRegex( "aBc", "a[abc]c", false ));
+        assertTrue(StringUtil.matchesRegex( "abc", ".*", true ));
+        assertFalse(StringUtil.matchesRegex( "aBc", "abc", true ));
+        assertFalse(StringUtil.matchesRegex( "aBc", "a[abc]c", true ));
+        assertFalse(StringUtil.matchesRegex("a[abc]c", "abc", true));
     }
     
     public void testFieldToString()

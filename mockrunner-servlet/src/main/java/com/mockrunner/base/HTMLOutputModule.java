@@ -1,11 +1,11 @@
 package com.mockrunner.base;
 
-import java.io.BufferedReader;
-import java.io.StringReader;
-
 import com.mockrunner.mock.web.WebMockObjectFactory;
 import com.mockrunner.util.common.StringUtil;
 import com.mockrunner.util.web.XmlUtil;
+
+import java.io.BufferedReader;
+import java.io.StringReader;
 
 /**
  * Base class for modules which produce HTML
@@ -138,7 +138,7 @@ public abstract class HTMLOutputModule extends WebTestModule
     public void verifyOutputRegularExpression(String expression)
     {
         String actualOutput = getOutput();
-        if(!StringUtil.matchesPerl5(actualOutput, expression, caseSensitive))
+        if(!StringUtil.matchesRegex(actualOutput, expression, caseSensitive))
         {
             throw new VerifyFailedException("actual output: " + actualOutput + " does not match expected output");
         }

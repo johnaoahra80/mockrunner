@@ -1,5 +1,7 @@
 package com.mockrunner.util.common;
 
+import com.mockrunner.base.NestedApplicationException;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -7,8 +9,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.mockrunner.base.NestedApplicationException;
 
 public class MethodUtil
 {
@@ -143,7 +143,7 @@ public class MethodUtil
         List resultList = new ArrayList();
         for(int ii = 0; ii < methods.length; ii++)
         {
-            if(StringUtil.matchesPerl5(methods[ii].getName(), expr, true))
+            if(StringUtil.matchesRegex(methods[ii].getName(), expr, true))
             {
                 resultList.add(methods[ii]);
             }

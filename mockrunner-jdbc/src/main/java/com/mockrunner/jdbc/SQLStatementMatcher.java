@@ -1,11 +1,11 @@
 package com.mockrunner.jdbc;
 
+import com.mockrunner.util.common.StringUtil;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import com.mockrunner.util.common.StringUtil;
 import java.util.Map.Entry;
 
 /**
@@ -108,7 +108,7 @@ public class SQLStatementMatcher<T>
 			}
 			if(doStringsMatch(source, currentQuery)){
                 Collection<? extends T> matchingObject = entry.getValue();
-                resultList.addAll(matchingObject);
+                resultList.addAll( matchingObject );
             }
         }
 		return resultList;
@@ -155,7 +155,7 @@ public class SQLStatementMatcher<T>
         if(null == query) query = "";
         if(useRegularExpressions && !exactMatch)
         {
-            return doPerl5Match(source, query);
+            return doRegExMatch( source, query );
         }
         else
         {
@@ -174,9 +174,8 @@ public class SQLStatementMatcher<T>
             return StringUtil.matchesContains(source, query, caseSensitive);
         }
     }
-    
-    private boolean doPerl5Match(String source, String query)
-    {
-        return StringUtil.matchesPerl5(source, query, caseSensitive);
+
+    private boolean doRegExMatch(String source, String query) {
+        return StringUtil.matchesRegex(source, query, caseSensitive);
     }
 }

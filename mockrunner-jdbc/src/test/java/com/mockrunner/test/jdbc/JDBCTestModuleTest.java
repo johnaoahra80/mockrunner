@@ -1,25 +1,5 @@
 package com.mockrunner.test.jdbc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.sql.ResultSet;
-import java.sql.Savepoint;
-import java.sql.Statement;
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import com.mockrunner.base.VerifyFailedException;
 import com.mockrunner.jdbc.JDBCTestModule;
 import com.mockrunner.jdbc.ParameterSets;
@@ -33,6 +13,25 @@ import com.mockrunner.mock.jdbc.MockResultSet;
 import com.mockrunner.mock.jdbc.MockSavepoint;
 import com.mockrunner.mock.jdbc.MockStatement;
 import com.mockrunner.mock.jdbc.ParameterIndex;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.sql.ResultSet;
+import java.sql.Savepoint;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class JDBCTestModuleTest
 {
@@ -247,7 +246,7 @@ public class JDBCTestModuleTest
         MockCallableStatement statement = module.getCallableStatement(".*CALL.*");
         assertEquals("{call getData(?, ?, ?, ?)}", statement.getSQL());
         module.verifyCallableStatementNotPresent("call setData");
-        module.verifyCallableStatementPresent("{call setData.*}");
+        module.verifyCallableStatementPresent("\\{call setData.*\\}");
     }
     
     @Test
@@ -412,13 +411,13 @@ public class JDBCTestModuleTest
         statement.execute("UPDATE");
         MockPreparedStatement preparedStatement = module.getPreparedStatement("insert.*");
         preparedStatement.execute();
-        MockCallableStatement callableStatement = module.getCallableStatement("{call.*");
+        MockCallableStatement callableStatement = module.getCallableStatement("\\{call.*");
         callableStatement.executeUpdate();
         module.verifySQLStatementExecuted("select");
         module.verifySQLStatementExecuted("update.*");
         module.verifySQLStatementExecuted("INSERT into .*");
-        module.verifySQLStatementExecuted("{call.*");
-        module.verifySQLStatementNotExecuted("{call}");
+        module.verifySQLStatementExecuted("\\{call.*");
+        module.verifySQLStatementNotExecuted("\\{call\\}");
         module.setCaseSensitive(true);
         module.verifySQLStatementExecuted("UPDATE.*");
         module.verifySQLStatementNotExecuted("update");
@@ -947,16 +946,16 @@ public class JDBCTestModuleTest
 		parameterSet1 = sets2.getParameterSet(0);
 		assertEquals(1, parameterSet1.size());
 		assertTrue(Arrays.equals(new byte[]{1}, (byte[])parameterSet1.get(1)));
-		ParameterSets sets3 = module.getExecutedSQLStatementParameterSets("{call setData\\(\\?, \\?, \\?, \\?\\)}");
+		ParameterSets sets3 = module.getExecutedSQLStatementParameterSets("\\{call setData\\(\\?, \\?, \\?, \\?\\)\\}");
 		assertEquals(1, sets3.getNumberParameterSets());
 		parameterSet1 = sets3.getParameterSet(0);
 		assertEquals(1, parameterSet1.size());
 		assertEquals(Boolean.FALSE, parameterSet1.get("name"));
-		ParameterSets sets4 = module.getExecutedSQLStatementParameterSets("{call getData\\(\\?, \\?, \\?, \\?\\)}");
+		ParameterSets sets4 = module.getExecutedSQLStatementParameterSets("\\{call getData\\(\\?, \\?, \\?, \\?\\)\\}");
 		assertEquals(1, sets4.getNumberParameterSets());
 		parameterSet1 = sets4.getParameterSet(0);
 		assertEquals(0, parameterSet1.size());
-		assertNull(module.getExecutedSQLStatementParameterSets("{call xyz"));
+		assertNull(module.getExecutedSQLStatementParameterSets("\\{call xyz"));
     }
     
     @Test
@@ -1229,7 +1228,7 @@ public class JDBCTestModuleTest
 		module.verifySQLStatementParameterNumber("{call getData(?, ?, ?, ?)}", 1, 2);
 		module.verifySQLStatementParameterNumber("{call getData(?, ?, ?, ?)}", 2, 2);
 		module.setUseRegularExpressions(true);
-		module.verifySQLStatementParameterNumber("{call getData\\(\\?, \\?, \\?, \\?\\)}", 2, 2);
+		module.verifySQLStatementParameterNumber("\\{call getData\\(\\?, \\?, \\?, \\?\\)\\}", 2, 2);
 		module.verifySQLStatementParameterNumber(".call getData.*}", 2, 2);
 		module.setUseRegularExpressions(false);
 		module.verifySQLStatementParameter("{call getData(?, ?, ?, ?)}", 1, 1, "xyz");
